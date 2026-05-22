@@ -10,7 +10,7 @@ export default function Privacy() {
   return (
     <>
       <Head>
-        <title>Privacy Policy — Backline</title>
+        <title>Privacy Policy — Advance</title>
       </Head>
       <div className="content">
         <a href="/" className="back-btn">← Back</a>
@@ -20,7 +20,7 @@ export default function Privacy() {
             <strong>Last updated:</strong> May 2026
           </p>
           <p>
-            Backline (&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;)
+            Advance (&ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;)
             helps tour managers, artists, and crew run shows together. This
             Privacy Policy explains what we collect, how we use it, and the
             choices you have.
@@ -31,7 +31,7 @@ export default function Privacy() {
             <li>Account information: name, email, role (manager, artist, crew, vendor)</li>
             <li>Tour data you enter: dates, venues, advance details, schedules</li>
             <li>Crew records: contact details, day rates, per diems, and roles</li>
-            <li>Backline and stage plot information you upload</li>
+            <li>Advance and stage plot information you upload</li>
             <li>Device and usage information used to operate the app</li>
           </ul>
 
@@ -46,7 +46,7 @@ export default function Privacy() {
           <h2>Sharing with venues and vendors</h2>
           <p>
             When you send an advance to a venue or hire a vendor through
-            Backline, we share only the fields you choose (e.g. stage plot,
+            Advance, we share only the fields you choose (e.g. stage plot,
             input list, hospitality rider) — never your full crew roster.
           </p>
 
@@ -60,8 +60,8 @@ export default function Privacy() {
           <h2>Contact</h2>
           <p>
             Questions? Email us at{" "}
-            <a className="eula-link" href="mailto:hello@backline.app">
-              hello@backline.app
+            <a className="eula-link" href="mailto:hello@advancetouring.app">
+              hello@advancetouring.app
             </a>
             .
           </p>

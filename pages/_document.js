@@ -4,16 +4,14 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <meta property="og:title" content="Backline" />
+        <meta property="og:title" content="Advance" />
         <meta
           property="og:description"
           content="Tour management for artists, crew, and backline gear."
         />
         <meta property="og:image" content="/images/og-image.jpg" />
         <meta property="og:type" content="website" />
-        <link rel="preload" as="image" href="/images/backline-logo.svg" />
-        <link rel="preload" as="image" href="/images/backline-appicon.svg" />
-        <link rel="preload" as="image" href="/images/backline-qr.svg" />
+        <link rel="preload" as="image" href="/images/advance-appicon.svg" />
       </Head>
       <body>
         <Main />
