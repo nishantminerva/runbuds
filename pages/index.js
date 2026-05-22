@@ -1,48 +1,56 @@
 import Head from "next/head";
 import { useState } from "react";
 
-const APP_ITINERARY = [
-  { icon: "✈️", time: "06:30", task: "Flight BER → CDG", active: true },
-  { icon: "🛬", time: "09:15", task: "Land at CDG" },
-  { icon: "🚐", time: "10:30", task: "Drive to Le Trianon" },
-  { icon: "🍽️", time: "13:00", task: "Catering & advance" },
-  { icon: "🎚️", time: "14:00", task: "Soundcheck" },
-  { icon: "🎤", time: "20:00", task: "Doors open" },
-];
-
-const NOTIFICATIONS = [
+const BOARD_ROWS = [
   {
-    icon: "✈️",
-    title: "Boarding now",
-    body: "BER → CDG · Gate 17",
-    pos: "n-top-right",
+    time: "06:30",
+    dest: "PARIS · LE TRIANON",
+    gate: "G17",
+    status: "BOARDING",
+    state: "boarding",
   },
   {
-    icon: "💡",
-    title: "Sam checked in",
-    body: "Lighting · ready for SC",
-    pos: "n-mid-right",
+    time: "14:00",
+    dest: "PARIS · SOUNDCHECK",
+    gate: "FOH",
+    status: "ON STAGE",
+    state: "live",
   },
   {
-    icon: "🚐",
-    title: "Driver ETA 30 min",
-    body: "Hotel pickup · Lyon route",
-    pos: "n-bottom-left",
+    time: "20:00",
+    dest: "PARIS · DOORS",
+    gate: "VEN",
+    status: "SCHEDULED",
+    state: "ok",
   },
   {
-    icon: "🎚️",
-    title: "Soundcheck pushed",
-    body: "Now 15:00 · promoter confirmed",
-    pos: "n-mid-left",
+    time: "23:30",
+    dest: "PARIS · LOAD-OUT",
+    gate: "BCK",
+    status: "SCHEDULED",
+    state: "ok",
   },
-];
-
-const AMBIENT = [
-  { emoji: "🎫", className: "amb-1" },
-  { emoji: "🛂", className: "amb-2" },
-  { emoji: "🎟️", className: "amb-3" },
-  { emoji: "💼", className: "amb-4" },
-  { emoji: "🔑", className: "amb-5" },
+  {
+    time: "01:00",
+    dest: "LYON · TRANSFER",
+    gate: "BUS",
+    status: "QUEUED",
+    state: "queued",
+  },
+  {
+    time: "09:00",
+    dest: "LYON · CHECK-IN",
+    gate: "HTL",
+    status: "QUEUED",
+    state: "queued",
+  },
+  {
+    time: "14:00",
+    dest: "LYON · SOUNDCHECK",
+    gate: "FOH",
+    status: "QUEUED",
+    state: "queued",
+  },
 ];
 
 export default function Home() {
@@ -62,70 +70,83 @@ export default function Home() {
       </Head>
 
       <div className="tour-scene" aria-hidden="true">
-        {/* Ambient floating tour items */}
-        {AMBIENT.map((a, i) => (
-          <span key={i} className={`ambient ${a.className}`}>
-            {a.emoji}
-          </span>
-        ))}
+        <div className="flight-board">
+          <div className="board-header">
+            <span className="board-title">
+              <span className="board-dot" />
+              TOUR · DEPARTURES
+            </span>
+            <span className="board-meta">
+              <span className="flap-cell flap-clock">TUE&nbsp;14:32</span>
+            </span>
+          </div>
 
-        {/* Phone mockup running the Backline app */}
-        <div className="phone-frame">
-          <div className="phone-notch" />
-          <div className="phone-screen">
-            <div className="app-header">
-              <div className="app-title-stack">
-                <span className="app-eyebrow">Today · Tue 14</span>
-                <span className="app-title">Paris ▸ Le Trianon</span>
-              </div>
-              <span className="app-avatar">🧑‍💼</span>
-            </div>
-            <div className="app-itinerary">
-              {APP_ITINERARY.map((item, i) => (
-                <div
-                  key={i}
-                  className={`app-item${item.active ? " app-item-active" : ""}`}
+          <div className="board-columns">
+            <span>TIME</span>
+            <span>DESTINATION</span>
+            <span>GATE</span>
+            <span>STATUS</span>
+          </div>
+
+          <div className="board-rows">
+            {BOARD_ROWS.map((r, i) => (
+              <div
+                key={i}
+                className={`board-row state-${r.state}`}
+                style={{ animationDelay: `${i * 0.4}s` }}
+              >
+                <span
+                  className="flap-cell"
+                  style={{ animationDelay: `${i * 0.7 + 0.1}s` }}
                 >
-                  <span className="app-item-icon">{item.icon}</span>
-                  <div className="app-item-text">
-                    <span className="app-item-time">{item.time}</span>
-                    <span className="app-item-task">{item.task}</span>
-                  </div>
-                  {item.active && <span className="app-item-pulse" />}
-                </div>
-              ))}
-            </div>
-            <div className="app-footer">
-              <span className="app-footer-dot" />
-              <span className="app-footer-text">Live · synced 2s ago</span>
-            </div>
+                  {r.time}
+                </span>
+                <span
+                  className="flap-cell flap-dest"
+                  style={{ animationDelay: `${i * 0.9 + 0.4}s` }}
+                >
+                  {r.dest}
+                </span>
+                <span
+                  className="flap-cell"
+                  style={{ animationDelay: `${i * 0.7 + 0.7}s` }}
+                >
+                  {r.gate}
+                </span>
+                <span
+                  className={`flap-cell flap-status status-${r.state}`}
+                  style={{ animationDelay: `${i * 0.5 + 0.2}s` }}
+                >
+                  {r.status}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="board-footer">
+            <span className="board-led led-on" />
+            <span className="board-led led-on" />
+            <span className="board-led led-on" />
+            <span className="board-footer-text">
+              ALEX RIVERA · TOUR MGR · LEG 12 OF 23
+            </span>
+            <span className="board-led led-blink" />
           </div>
         </div>
 
-        {/* Notification chips */}
-        {NOTIFICATIONS.map((n, i) => (
-          <div
-            key={i}
-            className={`notif ${n.pos}`}
-            style={{ animationDelay: `${i * 3}s` }}
-          >
-            <span className="notif-icon">{n.icon}</span>
-            <div className="notif-text">
-              <span className="notif-title">{n.title}</span>
-              <span className="notif-body">{n.body}</span>
-            </div>
+        {/* Boarding pass clipped to the board */}
+        <div className="boarding-pass">
+          <div className="bp-left">
+            <span className="bp-tag">BOARDING PASS</span>
+            <span className="bp-name">ALEX RIVERA</span>
+            <span className="bp-role">TOUR MANAGER · @alex_tm</span>
           </div>
-        ))}
-
-        {/* Alex user card */}
-        <div className="user-card">
-          <div className="user-avatar">
-            <span>🧑‍💼</span>
-            <span className="user-status" />
-          </div>
-          <div className="user-meta">
-            <span className="user-name">Alex Rivera</span>
-            <span className="user-role">Tour Manager · @alex_tm</span>
+          <div className="bp-right">
+            <span className="bp-route">BER → CDG</span>
+            <span className="bp-seat">SEAT 14A</span>
+            <span className="bp-stripes">
+              <span /><span /><span /><span /><span />
+            </span>
           </div>
         </div>
       </div>

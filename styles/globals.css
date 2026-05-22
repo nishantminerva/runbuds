@@ -312,9 +312,9 @@ body {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Tour scene — Alex's phone running the Backline app, with
-   push notifications sliding in and out, an ambient drift of
-   tour-day objects, and Alex's user card.
+   Tour scene — Alex's tour as an airport split-flap departures
+   board, with periodic flap-flips on cells. A boarding pass
+   pinned to the corner ties the schedule to Alex personally.
    ───────────────────────────────────────────────────────────── */
 
 .tour-scene {
@@ -323,459 +323,394 @@ body {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-  font-family: "Inter", sans-serif;
 }
 
-/* ── Phone mockup ─────────────────────────────────────────── */
+/* ── Flight board ─────────────────────────────────────────── */
 
-.phone-frame {
+.flight-board {
   position: absolute;
-  top: 6%;
-  left: 4%;
-  width: 240px;
-  height: 480px;
-  background: linear-gradient(155deg, #1a0b2e 0%, #0a0414 100%);
-  border-radius: 36px;
-  padding: 14px 12px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55),
-    0 0 0 2px rgba(255, 255, 255, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transform: rotate(-7deg);
-  animation: phone-float 6s ease-in-out infinite;
-}
-
-@keyframes phone-float {
-  0%,
-  100% {
-    transform: rotate(-7deg) translateY(0);
-  }
-  50% {
-    transform: rotate(-7deg) translateY(-10px);
-  }
-}
-
-.phone-notch {
-  position: absolute;
-  top: 12px;
+  top: 4vh;
   left: 50%;
-  transform: translateX(-50%);
-  width: 90px;
-  height: 18px;
-  background: #000;
-  border-radius: 10px;
-  z-index: 2;
+  transform: translateX(-50%) perspective(900px) rotateX(2deg);
+  width: min(720px, 92vw);
+  background: #0c1410;
+  border-radius: 14px;
+  padding: 14px 18px 12px;
+  font-family: "Courier New", "SF Mono", "Menlo", monospace;
+  color: #f5a623;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+    0 0 0 2px rgba(0, 0, 0, 0.6);
+  border: 2px solid #050807;
 }
 
-.phone-screen {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, #15082b 0%, #0a0414 100%);
-  border-radius: 24px;
-  padding: 38px 14px 14px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  font-family: "Inter", sans-serif;
+/* Subtle scanlines for retro CRT feel */
+.flight-board::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 4;
 }
 
-.app-header {
+.board-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
-  padding: 0 4px;
-}
-
-.app-title-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.app-eyebrow {
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.8px;
-  color: var(--accent);
-  text-transform: uppercase;
-}
-
-.app-title {
-  font-size: 13px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, #1c2820, #0c1410);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
   font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.3px;
+  letter-spacing: 2.5px;
+  border: 1px solid rgba(245, 166, 35, 0.18);
 }
 
-.app-avatar {
-  width: 28px;
-  height: 28px;
+.board-title {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
-  font-size: 16px;
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
-    sans-serif;
+  gap: 8px;
+  text-shadow: 0 0 10px rgba(245, 166, 35, 0.4);
 }
 
-.app-itinerary {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
-  overflow: hidden;
-}
-
-.app-item {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
-  transition: all 0.3s ease;
-}
-
-.app-item-active {
-  background: rgba(245, 166, 35, 0.18);
-  border-color: rgba(245, 166, 35, 0.5);
-  box-shadow: 0 0 18px rgba(245, 166, 35, 0.2);
-}
-
-.app-item-icon {
-  font-size: 16px;
-  line-height: 1;
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
-    sans-serif;
-}
-
-.app-item-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-  min-width: 0;
-}
-
-.app-item-time {
-  font-size: 9px;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.4px;
-}
-
-.app-item-task {
-  font-size: 10.5px;
-  font-weight: 500;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.app-item-pulse {
-  margin-left: auto;
+.board-dot {
+  display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.8);
-  animation: live-pulse 1.6s ease-out infinite;
+  background: #f5a623;
+  box-shadow: 0 0 8px #f5a623;
+  animation: dot-pulse 1.4s ease-in-out infinite;
 }
 
-@keyframes live-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(245, 166, 35, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0);
-  }
-}
-
-.app-footer {
-  margin-top: 10px;
-  padding: 8px 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(74, 222, 128, 0.08);
-  border-radius: 8px;
-}
-
-.app-footer-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 8px rgba(74, 222, 128, 0.8);
-  animation: dot-blink 1.4s ease-in-out infinite;
-}
-
-@keyframes dot-blink {
+@keyframes dot-pulse {
   0%,
   100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
     opacity: 0.5;
+    transform: scale(0.85);
   }
 }
 
-.app-footer-text {
-  font-size: 9.5px;
-  color: rgba(255, 255, 255, 0.7);
-  letter-spacing: 0.3px;
-}
-
-/* ── Notification chips ───────────────────────────────────── */
-
-.notif {
-  position: absolute;
+.board-meta {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.96);
-  color: #0a0414;
-  border-radius: 14px;
-  min-width: 220px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(245, 166, 35, 0.18);
-  opacity: 0;
-  animation: notif-cycle 12s ease-in-out infinite;
-  font-family: "Inter", sans-serif;
+  gap: 8px;
 }
 
-.notif-icon {
-  font-size: 24px;
-  line-height: 1;
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
-    sans-serif;
-}
-
-.notif-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.notif-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: #0a0414;
-}
-
-.notif-body {
-  font-size: 10.5px;
-  color: rgba(10, 4, 20, 0.65);
-  font-weight: 400;
-}
-
-.n-top-right {
-  top: 8%;
-  right: 6%;
-  transform: translateX(40px);
-}
-
-.n-mid-right {
-  top: 38%;
-  right: 4%;
-  transform: translateX(40px);
-}
-
-.n-bottom-left {
-  bottom: 18%;
-  left: 26%;
-  transform: translateX(-40px);
-}
-
-.n-mid-left {
-  top: 48%;
-  left: 22%;
-  transform: translateX(-40px);
-}
-
-@keyframes notif-cycle {
-  0%,
-  100% {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  6%,
-  22% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  28% {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-}
-
-.n-bottom-left,
-.n-mid-left {
-  /* Override the start/end transform so these slide from the LEFT */
-}
-
-.n-bottom-left {
-  animation-name: notif-cycle-left;
-}
-
-.n-mid-left {
-  animation-name: notif-cycle-left;
-}
-
-@keyframes notif-cycle-left {
-  0%,
-  100% {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
-  6%,
-  22% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  28% {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-}
-
-/* ── Alex user card ───────────────────────────────────────── */
-
-.user-card {
-  position: absolute;
-  bottom: 7%;
-  right: 5%;
-  display: flex;
-  align-items: center;
+.board-columns {
+  display: grid;
+  grid-template-columns: 70px 1fr 60px 110px;
   gap: 12px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 18px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  animation: user-card-rise 6s ease-in-out infinite;
+  padding: 6px 10px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(245, 166, 35, 0.45);
+  border-bottom: 1px solid rgba(245, 166, 35, 0.12);
+  margin-bottom: 6px;
+  font-weight: 700;
 }
 
-@keyframes user-card-rise {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-.user-avatar {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #3b1e6e, #f5a623);
-  border-radius: 50%;
-  font-size: 24px;
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
-    sans-serif;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
-}
-
-.user-status {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #4ade80;
-  border: 2px solid #0a0414;
-  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
-  animation: live-pulse 1.6s ease-out infinite;
-}
-
-.user-meta {
+.board-rows {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
+  gap: 4px;
 }
 
-.user-name {
-  font-family: "Clash Display", sans-serif;
-  font-size: 13pt;
-  font-weight: 600;
-  color: #fff;
+.board-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 60px 110px;
+  gap: 12px;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: rgba(245, 166, 35, 0.03);
+  transition: background 0.3s ease;
 }
 
-.user-role {
-  font-size: 10pt;
-  font-weight: 350;
-  color: rgba(255, 255, 255, 0.7);
+.board-row.state-boarding {
+  background: rgba(245, 166, 35, 0.18);
+  box-shadow: 0 0 24px rgba(245, 166, 35, 0.18),
+    inset 0 0 0 1px rgba(245, 166, 35, 0.35);
+  animation: row-glow 2.4s ease-in-out infinite;
 }
 
-/* ── Ambient floating tour items ──────────────────────────── */
-
-.ambient {
-  position: absolute;
-  font-size: 28px;
-  opacity: 0.18;
-  filter: grayscale(0.3);
-  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
-    sans-serif;
-  animation: drift 18s ease-in-out infinite;
-}
-
-.amb-1 {
-  top: 14%;
-  right: 30%;
-  animation-delay: 0s;
-}
-
-.amb-2 {
-  top: 70%;
-  left: 8%;
-  animation-delay: 3s;
-}
-
-.amb-3 {
-  top: 24%;
-  left: 36%;
-  animation-delay: 6s;
-}
-
-.amb-4 {
-  bottom: 38%;
-  right: 36%;
-  animation-delay: 9s;
-}
-
-.amb-5 {
-  top: 56%;
-  right: 12%;
-  animation-delay: 12s;
-}
-
-@keyframes drift {
+@keyframes row-glow {
   0%,
   100% {
-    transform: translateY(0) rotate(-4deg);
-    opacity: 0.16;
+    box-shadow: 0 0 14px rgba(245, 166, 35, 0.18),
+      inset 0 0 0 1px rgba(245, 166, 35, 0.35);
   }
   50% {
-    transform: translateY(-20px) rotate(4deg);
-    opacity: 0.28;
+    box-shadow: 0 0 30px rgba(245, 166, 35, 0.4),
+      inset 0 0 0 1px rgba(245, 166, 35, 0.6);
   }
+}
+
+.board-row.state-live {
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.board-row.state-queued .flap-cell {
+  color: rgba(245, 166, 35, 0.42);
+}
+
+/* Split-flap cell */
+.flap-cell {
+  position: relative;
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-shadow: 0 0 8px rgba(245, 166, 35, 0.35);
+  transform-origin: center;
+  animation: flap-flip 8s ease-in-out infinite;
+  backface-visibility: hidden;
+  white-space: nowrap;
+}
+
+.flap-dest {
+  font-size: 13px;
+  letter-spacing: 1.4px;
+}
+
+@keyframes flap-flip {
+  0%,
+  88%,
+  100% {
+    transform: rotateX(0deg);
+    filter: brightness(1);
+  }
+  92% {
+    transform: rotateX(-90deg);
+    filter: brightness(0.4);
+  }
+  94% {
+    transform: rotateX(-180deg);
+    filter: brightness(0.4);
+  }
+  96% {
+    transform: rotateX(-270deg);
+    filter: brightness(0.4);
+  }
+  98% {
+    transform: rotateX(-360deg);
+    filter: brightness(1);
+  }
+}
+
+.flap-status {
+  text-align: right;
+  font-size: 11.5px;
+  padding: 3px 8px;
+  border-radius: 3px;
+  letter-spacing: 1.5px;
+}
+
+.status-boarding {
+  color: #0a0414;
+  background: #f5a623;
+  text-shadow: none;
+  box-shadow: 0 0 12px rgba(245, 166, 35, 0.55);
+}
+
+.status-live {
+  color: #0a0414;
+  background: #4ade80;
+  text-shadow: none;
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.55);
+}
+
+.status-ok {
+  color: #f5a623;
+  border: 1px solid rgba(245, 166, 35, 0.4);
+}
+
+.status-queued {
+  color: rgba(245, 166, 35, 0.5);
+  border: 1px dashed rgba(245, 166, 35, 0.25);
+}
+
+.flap-clock {
+  font-size: 13px;
+  background: #050807;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(245, 166, 35, 0.25);
+  letter-spacing: 2px;
+  animation: flap-flip 6s ease-in-out infinite;
+}
+
+/* Board footer with LED indicators */
+.board-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  border-top: 1px solid rgba(245, 166, 35, 0.12);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(245, 166, 35, 0.55);
+  font-weight: 700;
+}
+
+.board-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(245, 166, 35, 0.2);
+}
+
+.board-led.led-on {
+  background: #f5a623;
+  box-shadow: 0 0 8px rgba(245, 166, 35, 0.8);
+}
+
+.board-led.led-blink {
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.7);
+  animation: dot-pulse 0.9s ease-in-out infinite;
+}
+
+.board-footer-text {
+  margin-left: 4px;
+}
+
+/* ── Boarding pass clipped to the board ───────────────────── */
+
+.boarding-pass {
+  position: absolute;
+  bottom: 6%;
+  right: 4%;
+  width: 320px;
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  background: linear-gradient(135deg, #ffffff 0%, #f4ede0 100%);
+  color: #0a0414;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: "Courier New", monospace;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(245, 166, 35, 0.3);
+  transform: rotate(-3deg);
+  animation: pass-sway 5s ease-in-out infinite;
+}
+
+.boarding-pass::before {
+  content: "✂";
+  position: absolute;
+  left: calc(100% - 132px);
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(10, 4, 20, 0.35);
+  font-size: 14px;
+}
+
+.boarding-pass::after {
+  content: "";
+  position: absolute;
+  left: calc(100% - 130px);
+  top: 8px;
+  bottom: 8px;
+  width: 0;
+  border-left: 2px dashed rgba(10, 4, 20, 0.18);
+}
+
+@keyframes pass-sway {
+  0%,
+  100% {
+    transform: rotate(-3deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-2deg) translateY(-6px);
+  }
+}
+
+.bp-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bp-tag {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(10, 4, 20, 0.55);
+  font-weight: 700;
+}
+
+.bp-name {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #0a0414;
+  font-family: "Clash Display", sans-serif;
+}
+
+.bp-role {
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  color: rgba(10, 4, 20, 0.6);
+  font-weight: 600;
+}
+
+.bp-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  padding-left: 14px;
+}
+
+.bp-route {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0a0414;
+  letter-spacing: 1.5px;
+}
+
+.bp-seat {
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  color: rgba(10, 4, 20, 0.6);
+  font-weight: 700;
+}
+
+.bp-stripes {
+  display: flex;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.bp-stripes span {
+  width: 4px;
+  height: 14px;
+  background: #0a0414;
+}
+
+.bp-stripes span:nth-child(2),
+.bp-stripes span:nth-child(4) {
+  width: 2px;
+  background: rgba(10, 4, 20, 0.55);
+}
+
+.bp-stripes span:nth-child(3) {
+  width: 6px;
 }
 
 
@@ -896,98 +831,79 @@ body.legal-page .text-container {
     --logo-width: 200px;
   }
   .content {
-    transform: translateY(-30px);
-    gap: 36px;
+    transform: translateY(20px);
+    gap: 32px;
   }
-  /* On mobile the phone mockup would dominate — shrink and tuck */
-  .phone-frame {
-    width: 150px;
-    height: 300px;
-    top: 4%;
-    left: -10%;
-    padding: 8px 6px;
-    transform: rotate(-10deg);
+  .flight-board {
+    width: 94vw;
+    top: 2vh;
+    padding: 10px 10px 8px;
   }
-  .phone-screen {
-    padding: 26px 8px 8px;
-  }
-  .phone-notch {
-    width: 56px;
-    height: 12px;
-  }
-  .app-eyebrow {
-    font-size: 7.5px;
-  }
-  .app-title {
-    font-size: 11px;
-  }
-  .app-avatar {
-    width: 22px;
-    height: 22px;
-    font-size: 13px;
-  }
-  .app-item {
-    padding: 5px 6px;
-    gap: 6px;
-  }
-  .app-item-icon {
-    font-size: 13px;
-  }
-  .app-item-time {
-    font-size: 7.5px;
-  }
-  .app-item-task {
+  .board-header {
+    padding: 6px 8px;
     font-size: 9px;
+    letter-spacing: 1.5px;
   }
-  .app-footer {
-    padding: 5px 6px;
+  .board-columns {
+    grid-template-columns: 48px 1fr 40px 72px;
+    gap: 6px;
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 4px 6px;
   }
-  .app-footer-text {
-    font-size: 7.5px;
+  .board-row {
+    grid-template-columns: 48px 1fr 40px 72px;
+    gap: 6px;
+    padding: 4px 6px;
   }
-  .notif {
-    min-width: 0;
-    max-width: 180px;
-    padding: 8px 10px;
-    transform: scale(0.85);
+  .flap-cell {
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    padding: 1px 2px;
   }
-  .notif-title {
-    font-size: 10.5px;
+  .flap-dest {
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .notif-body {
-    font-size: 9.5px;
+  .flap-status {
+    font-size: 8.5px;
+    padding: 2px 4px;
+    letter-spacing: 0.8px;
   }
-  .n-top-right {
-    top: 6%;
-    right: 4%;
+  .flap-clock {
+    font-size: 10px;
+    padding: 2px 6px;
   }
-  .n-mid-right {
-    top: 42%;
-    right: 4%;
+  .board-footer {
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 6px 6px;
   }
-  .n-mid-left,
-  .n-bottom-left {
-    display: none;
+  .boarding-pass {
+    width: 240px;
+    bottom: 4%;
+    right: 3%;
+    padding: 10px 12px;
+    grid-template-columns: 1fr 80px;
   }
-  .user-card {
-    bottom: 6%;
-    right: 4%;
-    padding: 8px 12px;
-    gap: 8px;
+  .bp-name {
+    font-size: 14px;
   }
-  .user-avatar {
-    width: 34px;
-    height: 34px;
-    font-size: 18px;
+  .bp-tag,
+  .bp-role,
+  .bp-seat {
+    font-size: 8.5px;
+    letter-spacing: 1px;
   }
-  .user-name {
-    font-size: 11pt;
+  .bp-route {
+    font-size: 11px;
+    letter-spacing: 1px;
   }
-  .user-role {
-    font-size: 8.5pt;
-  }
-  .ambient {
-    font-size: 20px;
+  .boarding-pass::before,
+  .boarding-pass::after {
+    left: calc(100% - 96px);
   }
   .page-title {
     font-size: 24pt;
