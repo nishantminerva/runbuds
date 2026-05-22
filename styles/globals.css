@@ -104,36 +104,17 @@ body {
   position: absolute;
   pointer-events: none;
   z-index: 0;
-  width: 1440px;
-  height: 1440px;
 }
 
-.track-graphic.top-left {
-  top: -640px;
-  left: -720px;
-}
-
-.track-graphic.bottom-right {
-  bottom: -640px;
-  right: -720px;
-}
-
-.track-graphic.mobile {
-  display: none;
-}
-
-.track-graphic.top-left,
-.track-graphic.bottom-right {
+.track-graphic.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(100vw, 100vh);
+  height: min(100vw, 100vh);
   opacity: 1;
   transition: opacity 0.3s var(--ease-scale);
   will-change: opacity;
-}
-
-@media (max-width: 880px) {
-  .track-graphic.top-left,
-  .track-graphic.bottom-right {
-    opacity: 0;
-  }
 }
 
 .content {
@@ -454,17 +435,6 @@ body.legal-page .text-container {
   .content {
     transform: translateY(-80px);
     gap: 50px;
-  }
-  .track-graphic.top-left,
-  .track-graphic.bottom-right {
-    display: none;
-  }
-  .track-graphic.mobile {
-    display: block;
-    width: 840px;
-    height: 840px;
-    bottom: -480px;
-    right: -420px;
   }
   .app-title {
     font-size: 2.5rem;

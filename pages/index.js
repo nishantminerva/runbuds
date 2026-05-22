@@ -3,57 +3,49 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [hover, setHover] = useState(false);
-  const tlRef = useRef(null);
-  const brRef = useRef(null);
-  const mobileRef = useRef(null);
+  const centerRef = useRef(null);
 
   const onEnter = () => setHover(true);
   const onLeave = () => setHover(false);
 
   useEffect(() => {
-    const instances = [];
+    let instance = null;
     let cancelled = false;
 
     const start = () => {
-      if (cancelled || !window.rive) return;
-      const make = (canvas, alignment) => {
-        if (!canvas) return null;
-        const r = new window.rive.Rive({
-          src: "/rive/track.riv",
-          canvas,
-          autoplay: true,
-          stateMachines: "State Machine 1",
-          fit: window.rive.Fit.cover,
-          alignment,
-          onLoad: () => r.resizeDrawingSurfaceToCanvas(),
-        });
-        return r;
-      };
-      instances.push(
-        make(tlRef.current, window.rive.Alignment.topLeft),
-        make(brRef.current, window.rive.Alignment.bottomRight),
-        make(mobileRef.current, window.rive.Alignment.bottomRight),
-      );
+      if (cancelled || !window.rive || !centerRef.current) return;
+      instance = new window.rive.Rive({
+        src: "/rive/track.riv",
+        canvas: centerRef.current,
+        autoplay: true,
+        stateMachines: "State Machine 1",
+        fit: window.rive.Fit.contain,
+        alignment: window.rive.Alignment.center,
+        onLoad: () => instance.resizeDrawingSurfaceToCanvas(),
+      });
     };
 
+    let intervalId = null;
     if (window.rive) start();
     else {
-      const id = setInterval(() => {
+      intervalId = setInterval(() => {
         if (window.rive) {
-          clearInterval(id);
+          clearInterval(intervalId);
+          intervalId = null;
           start();
         }
       }, 50);
-      return () => {
-        cancelled = true;
-        clearInterval(id);
-        instances.forEach((r) => r && r.cleanup && r.cleanup());
-      };
     }
+
+    const onResize = () =>
+      instance && instance.resizeDrawingSurfaceToCanvas();
+    window.addEventListener("resize", onResize);
 
     return () => {
       cancelled = true;
-      instances.forEach((r) => r && r.cleanup && r.cleanup());
+      if (intervalId) clearInterval(intervalId);
+      window.removeEventListener("resize", onResize);
+      if (instance && instance.cleanup) instance.cleanup();
     };
   }, []);
 
@@ -67,19 +59,9 @@ export default function Home() {
         />
       </Head>
       <canvas
-        ref={tlRef}
-        id="track-desktop-tl"
-        className="track-graphic top-left"
-      />
-      <canvas
-        ref={brRef}
-        id="track-desktop-br"
-        className="track-graphic bottom-right"
-      />
-      <canvas
-        ref={mobileRef}
-        id="track-mobile-br"
-        className="track-graphic mobile"
+        ref={centerRef}
+        id="track-center"
+        className="track-graphic center"
       />
       <div className="content">
         <div className="text-container">
