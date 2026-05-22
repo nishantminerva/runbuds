@@ -312,10 +312,9 @@ body {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Tour scene — Alex the tour manager's day. A scrolling
-   itinerary ticker at the top, and Alex at the bottom walking
-   through their day with a thought bubble cycling through
-   tasks while scenery pans past behind them.
+   Tour scene — Alex's phone running the Backline app, with
+   push notifications sliding in and out, an ambient drift of
+   tour-day objects, and Alex's user card.
    ───────────────────────────────────────────────────────────── */
 
 .tour-scene {
@@ -324,176 +323,351 @@ body {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  font-family: "Inter", sans-serif;
+}
+
+/* ── Phone mockup ─────────────────────────────────────────── */
+
+.phone-frame {
+  position: absolute;
+  top: 6%;
+  left: 4%;
+  width: 240px;
+  height: 480px;
+  background: linear-gradient(155deg, #1a0b2e 0%, #0a0414 100%);
+  border-radius: 36px;
+  padding: 14px 12px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55),
+    0 0 0 2px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: rotate(-7deg);
+  animation: phone-float 6s ease-in-out infinite;
+}
+
+@keyframes phone-float {
+  0%,
+  100% {
+    transform: rotate(-7deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-7deg) translateY(-10px);
+  }
+}
+
+.phone-notch {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 18px;
+  background: #000;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #15082b 0%, #0a0414 100%);
+  border-radius: 24px;
+  padding: 38px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: "Inter", sans-serif;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+
+.app-title-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.app-eyebrow {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.app-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.app-avatar {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  font-size: 16px;
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
     sans-serif;
 }
 
-/* ── Top: itinerary ticker ────────────────────────────────── */
-
-.itinerary-ticker {
-  position: absolute;
-  top: 28px;
-  left: 0;
-  right: 0;
-  height: 78px;
+.app-itinerary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
   overflow: hidden;
 }
 
-.ticker-track {
-  display: flex;
-  gap: 16px;
-  padding: 8px 0;
-  width: max-content;
-  animation: ticker-scroll 60s linear infinite;
-}
-
-@keyframes ticker-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.itinerary-card {
+.app-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-  min-width: 220px;
-  font-family: "Inter", sans-serif;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
 
-.card-icon {
-  font-size: 26px;
+.app-item-active {
+  background: rgba(245, 166, 35, 0.18);
+  border-color: rgba(245, 166, 35, 0.5);
+  box-shadow: 0 0 18px rgba(245, 166, 35, 0.2);
+}
+
+.app-item-icon {
+  font-size: 16px;
   line-height: 1;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+    sans-serif;
 }
 
-.card-text {
+.app-item-text {
   display: flex;
   flex-direction: column;
   line-height: 1.15;
+  min-width: 0;
 }
 
-.card-day {
-  font-size: 10pt;
-  font-weight: 500;
+.app-item-time {
+  font-size: 9px;
+  font-weight: 600;
   color: var(--accent);
   letter-spacing: 0.4px;
 }
 
-.card-task {
-  font-size: 11pt;
+.app-item-task {
+  font-size: 10.5px;
   font-weight: 500;
   color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.card-city {
-  font-size: 9pt;
-  font-weight: 350;
-  color: rgba(255, 255, 255, 0.6);
+.app-item-pulse {
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.8);
+  animation: live-pulse 1.6s ease-out infinite;
 }
 
-.ticker-edge {
+@keyframes live-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(245, 166, 35, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0);
+  }
+}
+
+.app-footer {
+  margin-top: 10px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(74, 222, 128, 0.08);
+  border-radius: 8px;
+}
+
+.app-footer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.8);
+  animation: dot-blink 1.4s ease-in-out infinite;
+}
+
+@keyframes dot-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.app-footer-text {
+  font-size: 9.5px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.3px;
+}
+
+/* ── Notification chips ───────────────────────────────────── */
+
+.notif {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 60px;
-  z-index: 2;
-  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #0a0414;
+  border-radius: 14px;
+  min-width: 220px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(245, 166, 35, 0.18);
+  opacity: 0;
+  animation: notif-cycle 12s ease-in-out infinite;
+  font-family: "Inter", sans-serif;
 }
 
-.ticker-edge-left {
-  left: 0;
-  background: linear-gradient(
-    90deg,
-    #0a0414 0%,
-    rgba(10, 4, 20, 0) 100%
-  );
+.notif-icon {
+  font-size: 24px;
+  line-height: 1;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+    sans-serif;
 }
 
-.ticker-edge-right {
-  right: 0;
-  background: linear-gradient(
-    270deg,
-    #0a0414 0%,
-    rgba(10, 4, 20, 0) 100%
-  );
-}
-
-/* ── Bottom: protagonist + scenery ────────────────────────── */
-
-.day-strip {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 200px;
+.notif-text {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 18px;
+  line-height: 1.2;
 }
 
-.scenery {
-  position: absolute;
-  bottom: 60px;
-  left: 0;
-  right: 0;
-  height: 70px;
-  overflow: hidden;
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0,
-    #000 8%,
-    #000 92%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0,
-    #000 8%,
-    #000 92%,
-    transparent 100%
-  );
+.notif-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0a0414;
 }
 
-.scenery-track {
-  display: flex;
-  gap: 90px;
-  width: max-content;
-  padding: 0 30px;
-  animation: scenery-pan 28s linear infinite;
+.notif-body {
+  font-size: 10.5px;
+  color: rgba(10, 4, 20, 0.65);
+  font-weight: 400;
 }
 
-.scenery-item {
-  font-size: 40px;
-  opacity: 0.45;
-  filter: grayscale(0.2);
-  animation: scenery-float 3.2s ease-in-out infinite;
+.n-top-right {
+  top: 8%;
+  right: 6%;
+  transform: translateX(40px);
 }
 
-.scenery-item:nth-child(odd) {
-  animation-delay: 1.1s;
+.n-mid-right {
+  top: 38%;
+  right: 4%;
+  transform: translateX(40px);
 }
 
-@keyframes scenery-pan {
-  from {
+.n-bottom-left {
+  bottom: 18%;
+  left: 26%;
+  transform: translateX(-40px);
+}
+
+.n-mid-left {
+  top: 48%;
+  left: 22%;
+  transform: translateX(-40px);
+}
+
+@keyframes notif-cycle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  6%,
+  22% {
+    opacity: 1;
     transform: translateX(0);
   }
-  to {
-    transform: translateX(-33.333%);
+  28% {
+    opacity: 0;
+    transform: translateX(-20px);
   }
 }
 
-@keyframes scenery-float {
+.n-bottom-left,
+.n-mid-left {
+  /* Override the start/end transform so these slide from the LEFT */
+}
+
+.n-bottom-left {
+  animation-name: notif-cycle-left;
+}
+
+.n-mid-left {
+  animation-name: notif-cycle-left;
+}
+
+@keyframes notif-cycle-left {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  6%,
+  22% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  28% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+}
+
+/* ── Alex user card ───────────────────────────────────────── */
+
+.user-card {
+  position: absolute;
+  bottom: 7%;
+  right: 5%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  animation: user-card-rise 6s ease-in-out infinite;
+}
+
+@keyframes user-card-rise {
   0%,
   100% {
     transform: translateY(0);
@@ -503,104 +677,107 @@ body {
   }
 }
 
-.protagonist {
+.user-avatar {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  z-index: 3;
-}
-
-.hero-emoji {
-  font-size: 56px;
-  line-height: 1;
-  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.6))
-    drop-shadow(0 0 18px rgba(245, 166, 35, 0.25));
-  animation: hero-walk 0.9s ease-in-out infinite;
-}
-
-@keyframes hero-walk {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-.hero-label {
-  font-family: "Clash Display", sans-serif;
-  font-size: 10pt;
-  color: rgba(255, 255, 255, 0.85);
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-
-.thought-bubble {
-  position: relative;
-  margin-bottom: 6px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.96);
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45),
-    0 0 0 3px rgba(245, 166, 35, 0.3);
+  background: linear-gradient(135deg, #3b1e6e, #f5a623);
+  border-radius: 50%;
+  font-size: 24px;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+    sans-serif;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
 }
 
-.thought-icon {
+.user-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4ade80;
+  border: 2px solid #0a0414;
+  box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+  animation: live-pulse 1.6s ease-out infinite;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-family: "Clash Display", sans-serif;
+  font-size: 13pt;
+  font-weight: 600;
+  color: #fff;
+}
+
+.user-role {
+  font-size: 10pt;
+  font-weight: 350;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ── Ambient floating tour items ──────────────────────────── */
+
+.ambient {
   position: absolute;
   font-size: 28px;
-  line-height: 1;
-  opacity: 0;
-  animation: thought-cycle 14s linear infinite;
+  opacity: 0.18;
+  filter: grayscale(0.3);
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+    sans-serif;
+  animation: drift 18s ease-in-out infinite;
 }
 
-@keyframes thought-cycle {
+.amb-1 {
+  top: 14%;
+  right: 30%;
+  animation-delay: 0s;
+}
+
+.amb-2 {
+  top: 70%;
+  left: 8%;
+  animation-delay: 3s;
+}
+
+.amb-3 {
+  top: 24%;
+  left: 36%;
+  animation-delay: 6s;
+}
+
+.amb-4 {
+  bottom: 38%;
+  right: 36%;
+  animation-delay: 9s;
+}
+
+.amb-5 {
+  top: 56%;
+  right: 12%;
+  animation-delay: 12s;
+}
+
+@keyframes drift {
   0%,
   100% {
-    opacity: 0;
-    transform: scale(0.6);
+    transform: translateY(0) rotate(-4deg);
+    opacity: 0.16;
   }
-  5%,
-  10% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  14% {
-    opacity: 0;
-    transform: scale(1.1);
+  50% {
+    transform: translateY(-20px) rotate(4deg);
+    opacity: 0.28;
   }
 }
 
-.bubble-tail {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.96);
-  transform: translateX(-50%);
-  box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.3);
-}
-
-.bubble-tail::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.96);
-  transform: translateX(-50%);
-  box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.3);
-}
 
 /* Legal page (privacy / terms) */
 .page-title {
@@ -722,56 +899,95 @@ body.legal-page .text-container {
     transform: translateY(-30px);
     gap: 36px;
   }
-  .itinerary-ticker {
-    top: 14px;
-    height: 70px;
+  /* On mobile the phone mockup would dominate — shrink and tuck */
+  .phone-frame {
+    width: 150px;
+    height: 300px;
+    top: 4%;
+    left: -10%;
+    padding: 8px 6px;
+    transform: rotate(-10deg);
   }
-  .itinerary-card {
-    min-width: 180px;
-    padding: 8px 12px;
+  .phone-screen {
+    padding: 26px 8px 8px;
   }
-  .card-icon {
-    font-size: 22px;
+  .phone-notch {
+    width: 56px;
+    height: 12px;
   }
-  .card-task {
-    font-size: 10pt;
-  }
-  .card-city,
-  .card-day {
-    font-size: 8.5pt;
-  }
-  .day-strip {
-    height: 150px;
-    padding-bottom: 8px;
-  }
-  .scenery {
-    bottom: 48px;
-    height: 50px;
-  }
-  .scenery-track {
-    gap: 60px;
-  }
-  .scenery-item {
-    font-size: 30px;
-  }
-  .hero-emoji {
-    font-size: 44px;
-  }
-  .thought-bubble {
-    width: 50px;
-    height: 50px;
-  }
-  .thought-icon {
-    font-size: 22px;
-  }
-  .hero-label {
-    font-size: 9pt;
+  .app-eyebrow {
+    font-size: 7.5px;
   }
   .app-title {
-    font-size: 2.5rem;
+    font-size: 11px;
   }
-  .tagline {
-    font-size: 12px;
+  .app-avatar {
+    width: 22px;
+    height: 22px;
+    font-size: 13px;
+  }
+  .app-item {
+    padding: 5px 6px;
+    gap: 6px;
+  }
+  .app-item-icon {
+    font-size: 13px;
+  }
+  .app-item-time {
+    font-size: 7.5px;
+  }
+  .app-item-task {
+    font-size: 9px;
+  }
+  .app-footer {
+    padding: 5px 6px;
+  }
+  .app-footer-text {
+    font-size: 7.5px;
+  }
+  .notif {
+    min-width: 0;
+    max-width: 180px;
+    padding: 8px 10px;
+    transform: scale(0.85);
+  }
+  .notif-title {
+    font-size: 10.5px;
+  }
+  .notif-body {
+    font-size: 9.5px;
+  }
+  .n-top-right {
+    top: 6%;
+    right: 4%;
+  }
+  .n-mid-right {
+    top: 42%;
+    right: 4%;
+  }
+  .n-mid-left,
+  .n-bottom-left {
+    display: none;
+  }
+  .user-card {
+    bottom: 6%;
+    right: 4%;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .user-avatar {
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+  }
+  .user-name {
+    font-size: 11pt;
+  }
+  .user-role {
+    font-size: 8.5pt;
+  }
+  .ambient {
+    font-size: 20px;
   }
   .page-title {
     font-size: 24pt;

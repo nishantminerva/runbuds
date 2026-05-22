@@ -1,27 +1,48 @@
 import Head from "next/head";
 import { useState } from "react";
 
-const ITINERARY = [
-  { icon: "🛏️", day: "Mon 23:00", city: "Berlin", task: "Hotel check-in" },
-  { icon: "✈️", day: "Tue 06:30", city: "BER → CDG", task: "Flight" },
-  { icon: "🛬", day: "Tue 09:15", city: "Paris", task: "Landed" },
-  { icon: "🚐", day: "Tue 10:00", city: "Le Trianon", task: "Drive to venue" },
-  { icon: "🍽️", day: "Tue 13:00", city: "Backstage", task: "Catering" },
-  { icon: "🎚️", day: "Tue 14:00", city: "FOH", task: "Soundcheck" },
-  { icon: "🎤", day: "Tue 20:00", city: "Le Trianon", task: "Doors open" },
-  { icon: "🎵", day: "Tue 21:00", city: "Le Trianon", task: "Show time" },
-  { icon: "📦", day: "Tue 23:30", city: "Stage", task: "Load out" },
-  { icon: "🚌", day: "Wed 01:00", city: "→ Lyon", task: "Roll to next city" },
+const APP_ITINERARY = [
+  { icon: "✈️", time: "06:30", task: "Flight BER → CDG", active: true },
+  { icon: "🛬", time: "09:15", task: "Land at CDG" },
+  { icon: "🚐", time: "10:30", task: "Drive to Le Trianon" },
+  { icon: "🍽️", time: "13:00", task: "Catering & advance" },
+  { icon: "🎚️", time: "14:00", task: "Soundcheck" },
+  { icon: "🎤", time: "20:00", task: "Doors open" },
 ];
 
-const DAY_BEATS = [
-  "✈️",
-  "🏨",
-  "🚐",
-  "🎚️",
-  "🎤",
-  "📦",
-  "🛏️",
+const NOTIFICATIONS = [
+  {
+    icon: "✈️",
+    title: "Boarding now",
+    body: "BER → CDG · Gate 17",
+    pos: "n-top-right",
+  },
+  {
+    icon: "💡",
+    title: "Sam checked in",
+    body: "Lighting · ready for SC",
+    pos: "n-mid-right",
+  },
+  {
+    icon: "🚐",
+    title: "Driver ETA 30 min",
+    body: "Hotel pickup · Lyon route",
+    pos: "n-bottom-left",
+  },
+  {
+    icon: "🎚️",
+    title: "Soundcheck pushed",
+    body: "Now 15:00 · promoter confirmed",
+    pos: "n-mid-left",
+  },
+];
+
+const AMBIENT = [
+  { emoji: "🎫", className: "amb-1" },
+  { emoji: "🛂", className: "amb-2" },
+  { emoji: "🎟️", className: "amb-3" },
+  { emoji: "💼", className: "amb-4" },
+  { emoji: "🔑", className: "amb-5" },
 ];
 
 export default function Home() {
@@ -41,52 +62,70 @@ export default function Home() {
       </Head>
 
       <div className="tour-scene" aria-hidden="true">
-        {/* Top: scrolling itinerary ticker */}
-        <div className="itinerary-ticker">
-          <div className="ticker-edge ticker-edge-left" />
-          <div className="ticker-track">
-            {[...ITINERARY, ...ITINERARY].map((it, i) => (
-              <div key={i} className="itinerary-card">
-                <span className="card-icon">{it.icon}</span>
-                <div className="card-text">
-                  <span className="card-day">{it.day}</span>
-                  <span className="card-task">{it.task}</span>
-                  <span className="card-city">{it.city}</span>
-                </div>
+        {/* Ambient floating tour items */}
+        {AMBIENT.map((a, i) => (
+          <span key={i} className={`ambient ${a.className}`}>
+            {a.emoji}
+          </span>
+        ))}
+
+        {/* Phone mockup running the Backline app */}
+        <div className="phone-frame">
+          <div className="phone-notch" />
+          <div className="phone-screen">
+            <div className="app-header">
+              <div className="app-title-stack">
+                <span className="app-eyebrow">Today · Tue 14</span>
+                <span className="app-title">Paris ▸ Le Trianon</span>
               </div>
-            ))}
+              <span className="app-avatar">🧑‍💼</span>
+            </div>
+            <div className="app-itinerary">
+              {APP_ITINERARY.map((item, i) => (
+                <div
+                  key={i}
+                  className={`app-item${item.active ? " app-item-active" : ""}`}
+                >
+                  <span className="app-item-icon">{item.icon}</span>
+                  <div className="app-item-text">
+                    <span className="app-item-time">{item.time}</span>
+                    <span className="app-item-task">{item.task}</span>
+                  </div>
+                  {item.active && <span className="app-item-pulse" />}
+                </div>
+              ))}
+            </div>
+            <div className="app-footer">
+              <span className="app-footer-dot" />
+              <span className="app-footer-text">Live · synced 2s ago</span>
+            </div>
           </div>
-          <div className="ticker-edge ticker-edge-right" />
         </div>
 
-        {/* Bottom: protagonist with day scenery panning past */}
-        <div className="day-strip">
-          <div className="scenery">
-            <div className="scenery-track">
-              {[...DAY_BEATS, ...DAY_BEATS, ...DAY_BEATS].map((emoji, i) => (
-                <span key={i} className="scenery-item">
-                  {emoji}
-                </span>
-              ))}
+        {/* Notification chips */}
+        {NOTIFICATIONS.map((n, i) => (
+          <div
+            key={i}
+            className={`notif ${n.pos}`}
+            style={{ animationDelay: `${i * 3}s` }}
+          >
+            <span className="notif-icon">{n.icon}</span>
+            <div className="notif-text">
+              <span className="notif-title">{n.title}</span>
+              <span className="notif-body">{n.body}</span>
             </div>
           </div>
-          <div className="protagonist">
-            <div className="thought-bubble">
-              {DAY_BEATS.map((emoji, i) => (
-                <span
-                  key={i}
-                  className="thought-icon"
-                  style={{
-                    animationDelay: `${(i * 14) / DAY_BEATS.length}s`,
-                  }}
-                >
-                  {emoji}
-                </span>
-              ))}
-              <span className="bubble-tail" />
-            </div>
-            <span className="hero-emoji">🧑‍💼</span>
-            <span className="hero-label">Alex · Tour Manager</span>
+        ))}
+
+        {/* Alex user card */}
+        <div className="user-card">
+          <div className="user-avatar">
+            <span>🧑‍💼</span>
+            <span className="user-status" />
+          </div>
+          <div className="user-meta">
+            <span className="user-name">Alex Rivera</span>
+            <span className="user-role">Tour Manager · @alex_tm</span>
           </div>
         </div>
       </div>
