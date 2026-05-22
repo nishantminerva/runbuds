@@ -1,0 +1,527 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --appicon-inner: 32px;
+  --appicon-outer: 40px;
+  --qrcode-inner: 8px;
+  --qrcode-outer: 16px;
+  --btn-width-download: 180px;
+  --btn-width-qr: 128px;
+  --download-blur-download: 0px;
+  --download-opacity-download: 1;
+  --download-offset-download: -0.35px;
+  --download-blur-qr: 10px;
+  --download-opacity-qr: 0;
+  --download-offset-qr: -8px;
+  --scan-blur-download: 10px;
+  --scan-opacity-download: 0;
+  --scan-offset-download: 8px;
+  --scan-blur-qr: 0px;
+  --scan-opacity-qr: 1;
+  --scan-offset-qr: -0.35px;
+  --hover-bg-scale: 1.05;
+  --hover-text-scale: 1.05;
+  --btn-radius: 99px;
+  --btn-font-size: 1.2rem;
+  --btn-height: 48px;
+  --ease-scale: cubic-bezier(0.2, 0, 0.2, 1);
+  --ease-width: cubic-bezier(0.2, 0, 0.2, 1);
+  --ease-text: cubic-bezier(0.2, 0, 0.2, 1);
+  --dur-bg-scale: 0.12s;
+  --dur-text-scale: 0.36s;
+  --dur-width: 0.3s;
+  --dur-text-swap: 0.3s;
+  --legal-title-font: "Clash Display", sans-serif;
+  --legal-title-size: 32pt;
+  --legal-title-weight: 600;
+  --legal-title-letter-spacing: 0px;
+  --legal-body-font: "Inter", sans-serif;
+  --legal-body-size: 15pt;
+  --legal-body-weight: 350;
+  --legal-h2-size: 24pt;
+  --legal-h2-weight: 500;
+  --logo-width: 200px;
+  --apple-svg-width: 20px;
+  --apple-svg-height: 20px;
+  --apple-svg-y-offset: -1.5px;
+}
+
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+}
+
+html {
+  background-color: #c82a1a;
+}
+
+body,
+html {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  color: #fff;
+  position: relative;
+  background: linear-gradient(180deg, #c82a1a, #62150d);
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@font-face {
+  font-family: "Clash Display";
+  src: url(/fonts/ClashDisplay-Medium.ttf) format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url(/fonts/SF-Pro-Display-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url(/fonts/Inter-Variable.ttf) format("truetype");
+}
+
+.track-graphic {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  width: 1440px;
+  height: 1440px;
+}
+
+.track-graphic.top-left {
+  top: -640px;
+  left: -720px;
+}
+
+.track-graphic.bottom-right {
+  bottom: -640px;
+  right: -720px;
+}
+
+.track-graphic.mobile {
+  display: none;
+}
+
+.track-graphic.top-left,
+.track-graphic.bottom-right {
+  opacity: 1;
+  transition: opacity 0.3s var(--ease-scale);
+  will-change: opacity;
+}
+
+@media (max-width: 880px) {
+  .track-graphic.top-left,
+  .track-graphic.bottom-right {
+    opacity: 0;
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  transform: translateY(-16px);
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-logo {
+  width: var(--logo-width);
+  height: auto;
+}
+
+.tagline {
+  font-family: Inter, sans-serif;
+  font-weight: 250;
+  font-size: 15pt;
+  color: #fff;
+}
+
+.icon-container {
+  width: 164px;
+  height: 164px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: var(--appicon-outer);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: border-radius 0.3s ease;
+}
+
+.icon-view {
+  width: 144px;
+  height: 144px;
+  border-radius: var(--appicon-inner);
+  overflow: hidden;
+  position: relative;
+  transition: border-radius 0.3s ease;
+}
+
+.appicon {
+  border-radius: 32px;
+}
+
+.appicon,
+.qrcode {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+.qrcode {
+  border-radius: 0;
+  opacity: 0;
+}
+
+.icon-container.qr-state .appicon {
+  opacity: 0;
+}
+.icon-container.qr-state .qrcode {
+  opacity: 1;
+}
+.icon-container.qr-state {
+  border-radius: var(--qrcode-outer);
+}
+.icon-container.qr-state .icon-view {
+  border-radius: var(--qrcode-inner);
+}
+
+.download-btn {
+  font-family: "SF Pro Display", sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #fff;
+  border-radius: var(--btn-radius);
+  height: var(--btn-height);
+  padding: 0 20px;
+  font-size: var(--btn-font-size) !important;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  position: relative;
+}
+
+.download-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  border-radius: var(--btn-radius);
+  transform: scale(1);
+  transition: transform var(--dur-bg-scale) var(--ease-scale);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.download-btn:hover::before {
+  transform: scale(var(--hover-bg-scale));
+}
+
+.button-text-container {
+  position: relative;
+  height: 1.2em;
+  overflow: hidden;
+  width: var(--btn-width-download);
+  transition: transform 0.18s cubic-bezier(0.2, 0, 0.2, 1),
+    width 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+  transform: translateZ(0) scale(1);
+  transform-origin: center;
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: paint;
+}
+
+.download-btn:hover .button-text-container {
+  transform: translateZ(0) scale(var(--hover-text-scale));
+}
+
+.download-btn svg {
+  width: var(--apple-svg-width);
+  height: var(--apple-svg-height);
+  transform: translateY(var(--apple-svg-y-offset));
+}
+
+.download-text,
+.scan-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: all var(--dur-text-swap) var(--ease-text);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.download-text {
+  opacity: var(--download-opacity-download);
+  filter: blur(var(--download-blur-download));
+  transform: translateY(var(--download-offset-download));
+}
+
+.scan-text {
+  opacity: var(--scan-opacity-download);
+  filter: blur(var(--scan-blur-download));
+  transform: translateY(var(--scan-offset-download));
+}
+
+.download-btn.qr-state .button-text-container {
+  width: var(--btn-width-qr);
+}
+
+.download-btn.qr-state .download-text {
+  opacity: var(--download-opacity-qr);
+  filter: blur(var(--download-blur-qr));
+  transform: translateY(var(--download-offset-qr));
+}
+
+.download-btn.qr-state .scan-text {
+  opacity: var(--scan-opacity-qr);
+  filter: blur(var(--scan-blur-qr));
+  transform: translateY(var(--scan-offset-qr));
+}
+
+.legal-links-desktop {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.legal-links-mobile {
+  display: none;
+}
+
+.legal-link {
+  font-family: "Clash Display", sans-serif;
+  font-weight: 250;
+  font-size: 15pt;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Legal page (privacy / terms) */
+.page-title {
+  font-family: var(--legal-title-font);
+  font-size: var(--legal-title-size);
+  font-weight: var(--legal-title-weight);
+  letter-spacing: var(--legal-title-letter-spacing);
+  color: #fff;
+  text-align: left;
+  margin-bottom: 40px;
+}
+
+.terms-content {
+  text-align: left;
+  margin-bottom: 40px;
+  max-width: none;
+  line-height: 1.6;
+}
+
+.terms-content p {
+  font-family: var(--legal-body-font);
+  font-size: var(--legal-body-size);
+  font-weight: var(--legal-body-weight);
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.terms-content h2 {
+  font-family: var(--legal-title-font);
+  font-size: var(--legal-h2-size);
+  font-weight: var(--legal-h2-weight);
+  color: #fff;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.terms-content ul {
+  margin-bottom: 20px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.terms-content li {
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 1.2em;
+  font-family: var(--legal-body-font);
+  font-size: var(--legal-body-size);
+  font-weight: var(--legal-body-weight);
+  color: #fff;
+}
+
+.terms-content li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0.1em;
+  line-height: 1;
+}
+
+.terms-content strong {
+  font-weight: 600;
+}
+
+body.legal-page {
+  overflow-y: auto;
+  padding-top: 120px;
+  padding-bottom: 40px;
+  display: block;
+  align-items: normal;
+  justify-content: normal;
+}
+
+body.legal-page .content {
+  display: block;
+  text-align: left;
+  gap: initial;
+  width: calc(100vw - 32px);
+  max-width: 720px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 0;
+  transform: none;
+}
+
+body.legal-page .text-container {
+  display: block;
+  align-items: normal;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.eula-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: underline;
+}
+
+.back-btn {
+  font-family: "SF Pro Display", sans-serif;
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: #fff;
+  opacity: 0.8;
+  border-radius: 0;
+  padding: 0;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 560px) {
+  .content {
+    transform: translateY(-80px);
+    gap: 50px;
+  }
+  .track-graphic.top-left,
+  .track-graphic.bottom-right {
+    display: none;
+  }
+  .track-graphic.mobile {
+    display: block;
+    width: 840px;
+    height: 840px;
+    bottom: -480px;
+    right: -420px;
+  }
+  .app-title {
+    font-size: 2.5rem;
+  }
+  .tagline {
+    font-size: 12px;
+  }
+  .page-title {
+    font-size: 24pt;
+    margin-bottom: 20px;
+  }
+  .terms-content h2 {
+    font-size: 18pt;
+    margin-top: 30px;
+    margin-bottom: 15px;
+  }
+  .terms-content p,
+  .terms-content li {
+    font-size: 14pt;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+  .terms-content li {
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .back-btn {
+    font-size: 1rem;
+  }
+  .legal-links-desktop {
+    display: none;
+  }
+  .legal-links-mobile {
+    display: flex;
+    gap: 12px;
+    margin-top: 0;
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 2;
+    padding: 8px;
+  }
+  .legal-link {
+    font-size: 12pt;
+  }
+  body.legal-page {
+    padding-top: 80px;
+    padding-bottom: 20px;
+  }
+  body.legal-page .content {
+    padding: 0;
+    width: calc(100vw - 32px);
+    max-width: 720px;
+  }
+  body.legal-page .back-btn {
+    margin-bottom: 15px;
+  }
+}
