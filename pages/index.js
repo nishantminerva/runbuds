@@ -1,55 +1,66 @@
 import Head from "next/head";
 import { useState } from "react";
 
-const BOARD_ROWS = [
+const CREW = [
   {
-    time: "06:30",
-    dest: "PARIS · LE TRIANON",
-    gate: "G17",
-    status: "BOARDING",
-    state: "boarding",
+    emoji: "🧑🏻‍💼",
+    name: "Alex Rivera",
+    role: "Tour Mgr",
+    taskIcon: "📋",
+    task: "Advancing Lyon",
+    status: "online",
+    x: 6,
+    y: 12,
   },
   {
-    time: "14:00",
-    dest: "PARIS · SOUNDCHECK",
-    gate: "FOH",
-    status: "ON STAGE",
-    state: "live",
+    emoji: "👨🏾‍🎤",
+    name: "Marcus",
+    role: "Lead Vocals",
+    taskIcon: "🎤",
+    task: "Warm-up · GR3",
+    status: "online",
+    x: 22,
+    y: 26,
   },
   {
-    time: "20:00",
-    dest: "PARIS · DOORS",
-    gate: "VEN",
-    status: "SCHEDULED",
-    state: "ok",
+    emoji: "👩🏼‍🦰",
+    name: "Maya Chen",
+    role: "FOH Engineer",
+    taskIcon: "🎚️",
+    task: "Soundcheck · live",
+    status: "live",
+    x: 38,
+    y: 8,
   },
   {
-    time: "23:30",
-    dest: "PARIS · LOAD-OUT",
-    gate: "BCK",
-    status: "SCHEDULED",
-    state: "ok",
+    emoji: "🧔🏽",
+    name: "Dre Patel",
+    role: "Backline",
+    taskIcon: "🎸",
+    task: "Tuning rigs",
+    status: "online",
+    x: 60,
+    y: 24,
   },
   {
-    time: "01:00",
-    dest: "LYON · TRANSFER",
-    gate: "BUS",
-    status: "QUEUED",
-    state: "queued",
+    emoji: "👨🏼‍✈️",
+    name: "Lex Morgan",
+    role: "Driver",
+    taskIcon: "🚐",
+    task: "ETA 30 min",
+    status: "transit",
+    x: 76,
+    y: 10,
   },
   {
-    time: "09:00",
-    dest: "LYON · CHECK-IN",
-    gate: "HTL",
-    status: "QUEUED",
-    state: "queued",
-  },
-  {
-    time: "14:00",
-    dest: "LYON · SOUNDCHECK",
-    gate: "FOH",
-    status: "QUEUED",
-    state: "queued",
+    emoji: "👩🏿‍🦱",
+    name: "Rosa Vega",
+    role: "Stage Mgr",
+    taskIcon: "📻",
+    task: "Comms open",
+    status: "online",
+    x: 92,
+    y: 24,
   },
 ];
 
@@ -70,83 +81,68 @@ export default function Home() {
       </Head>
 
       <div className="tour-scene" aria-hidden="true">
-        <div className="flight-board">
-          <div className="board-header">
-            <span className="board-title">
-              <span className="board-dot" />
-              TOUR · DEPARTURES
-            </span>
-            <span className="board-meta">
-              <span className="flap-cell flap-clock">TUE&nbsp;14:32</span>
-            </span>
-          </div>
-
-          <div className="board-columns">
-            <span>TIME</span>
-            <span>DESTINATION</span>
-            <span>GATE</span>
-            <span>STATUS</span>
-          </div>
-
-          <div className="board-rows">
-            {BOARD_ROWS.map((r, i) => (
-              <div
-                key={i}
-                className={`board-row state-${r.state}`}
-                style={{ animationDelay: `${i * 0.4}s` }}
-              >
-                <span
-                  className="flap-cell"
-                  style={{ animationDelay: `${i * 0.7 + 0.1}s` }}
-                >
-                  {r.time}
-                </span>
-                <span
-                  className="flap-cell flap-dest"
-                  style={{ animationDelay: `${i * 0.9 + 0.4}s` }}
-                >
-                  {r.dest}
-                </span>
-                <span
-                  className="flap-cell"
-                  style={{ animationDelay: `${i * 0.7 + 0.7}s` }}
-                >
-                  {r.gate}
-                </span>
-                <span
-                  className={`flap-cell flap-status status-${r.state}`}
-                  style={{ animationDelay: `${i * 0.5 + 0.2}s` }}
-                >
-                  {r.status}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="board-footer">
-            <span className="board-led led-on" />
-            <span className="board-led led-on" />
-            <span className="board-led led-on" />
-            <span className="board-footer-text">
-              ALEX RIVERA · TOUR MGR · LEG 12 OF 23
-            </span>
-            <span className="board-led led-blink" />
-          </div>
+        {/* Eyebrow */}
+        <div className="route-eyebrow">
+          <span className="route-eyebrow-dot" />
+          BACKLINE · LIVE TOUR · TUE 14
         </div>
 
-        {/* Boarding pass clipped to the board */}
-        <div className="boarding-pass">
-          <div className="bp-left">
-            <span className="bp-tag">BOARDING PASS</span>
-            <span className="bp-name">ALEX RIVERA</span>
-            <span className="bp-role">TOUR MANAGER · @alex_tm</span>
+        {/* The wavy tour route path */}
+        <svg
+          className="route-svg"
+          viewBox="0 0 100 30"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M 0 18 Q 14 4, 28 22 T 56 16 T 84 14 T 100 22"
+            fill="none"
+            stroke="rgba(245, 166, 35, 0.32)"
+            strokeWidth="0.35"
+            strokeDasharray="0.8 0.9"
+          />
+        </svg>
+
+        {/* Crew memoji avatars along the route */}
+        {CREW.map((m, i) => (
+          <div
+            key={i}
+            className="crew-pin"
+            style={{
+              left: `${m.x}%`,
+              top: `${m.y}%`,
+              animationDelay: `${i * 0.4}s`,
+            }}
+          >
+            <div className={`memoji-badge memoji-${i}`}>
+              <span className="memoji">{m.emoji}</span>
+              <span className={`status-dot status-${m.status}`} />
+            </div>
+            <div className="crew-card">
+              <span className="crew-name">{m.name}</span>
+              <span className="crew-role">{m.role}</span>
+              <span className="crew-task">
+                <span className="crew-task-icon">{m.taskIcon}</span>
+                {m.task}
+              </span>
+            </div>
           </div>
-          <div className="bp-right">
-            <span className="bp-route">BER → CDG</span>
-            <span className="bp-seat">SEAT 14A</span>
-            <span className="bp-stripes">
-              <span /><span /><span /><span /><span />
+        ))}
+
+        {/* Live now status bar */}
+        <div className="live-bar">
+          <div className="live-bar-led" />
+          <div className="live-bar-text">
+            <span className="live-bar-label">LIVE NOW</span>
+            <span className="live-bar-task">
+              🎚️ Soundcheck · 14:00 · Le Trianon, Paris
             </span>
+          </div>
+          <div className="live-bar-spark">
+            <span /><span /><span /><span /><span /><span /><span />
+          </div>
+          <div className="live-bar-count">
+            <span className="live-bar-count-num">6</span>
+            <span className="live-bar-count-lbl">CREW ONLINE</span>
           </div>
         </div>
       </div>
