@@ -1,15 +1,27 @@
 import Head from "next/head";
 import { useState } from "react";
 
-const ROLES = [
-  { emoji: "🎸", label: "Guitar" },
-  { emoji: "🥁", label: "Drums" },
-  { emoji: "🎹", label: "Keys" },
-  { emoji: "🎚️", label: "FOH" },
-  { emoji: "💡", label: "Lights" },
-  { emoji: "🚐", label: "Driver" },
-  { emoji: "📋", label: "Manager" },
-  { emoji: "🎟️", label: "Box Office" },
+const ITINERARY = [
+  { icon: "🛏️", day: "Mon 23:00", city: "Berlin", task: "Hotel check-in" },
+  { icon: "✈️", day: "Tue 06:30", city: "BER → CDG", task: "Flight" },
+  { icon: "🛬", day: "Tue 09:15", city: "Paris", task: "Landed" },
+  { icon: "🚐", day: "Tue 10:00", city: "Le Trianon", task: "Drive to venue" },
+  { icon: "🍽️", day: "Tue 13:00", city: "Backstage", task: "Catering" },
+  { icon: "🎚️", day: "Tue 14:00", city: "FOH", task: "Soundcheck" },
+  { icon: "🎤", day: "Tue 20:00", city: "Le Trianon", task: "Doors open" },
+  { icon: "🎵", day: "Tue 21:00", city: "Le Trianon", task: "Show time" },
+  { icon: "📦", day: "Tue 23:30", city: "Stage", task: "Load out" },
+  { icon: "🚌", day: "Wed 01:00", city: "→ Lyon", task: "Roll to next city" },
+];
+
+const DAY_BEATS = [
+  "✈️",
+  "🏨",
+  "🚐",
+  "🎚️",
+  "🎤",
+  "📦",
+  "🛏️",
 ];
 
 export default function Home() {
@@ -28,21 +40,55 @@ export default function Home() {
         />
       </Head>
 
-      <div className="orbit-stage" aria-hidden="true">
-        <div className="orbit-glow" />
-        <div className="orbit-ring" />
-        {ROLES.map((r, i) => (
-          <div
-            key={r.label}
-            className="orbit-item"
-            style={{
-              animationDelay: `${(-40 / ROLES.length) * i}s`,
-            }}
-            title={r.label}
-          >
-            <span className="orbit-emoji">{r.emoji}</span>
+      <div className="tour-scene" aria-hidden="true">
+        {/* Top: scrolling itinerary ticker */}
+        <div className="itinerary-ticker">
+          <div className="ticker-edge ticker-edge-left" />
+          <div className="ticker-track">
+            {[...ITINERARY, ...ITINERARY].map((it, i) => (
+              <div key={i} className="itinerary-card">
+                <span className="card-icon">{it.icon}</span>
+                <div className="card-text">
+                  <span className="card-day">{it.day}</span>
+                  <span className="card-task">{it.task}</span>
+                  <span className="card-city">{it.city}</span>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="ticker-edge ticker-edge-right" />
+        </div>
+
+        {/* Bottom: protagonist with day scenery panning past */}
+        <div className="day-strip">
+          <div className="scenery">
+            <div className="scenery-track">
+              {[...DAY_BEATS, ...DAY_BEATS, ...DAY_BEATS].map((emoji, i) => (
+                <span key={i} className="scenery-item">
+                  {emoji}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="protagonist">
+            <div className="thought-bubble">
+              {DAY_BEATS.map((emoji, i) => (
+                <span
+                  key={i}
+                  className="thought-icon"
+                  style={{
+                    animationDelay: `${(i * 14) / DAY_BEATS.length}s`,
+                  }}
+                >
+                  {emoji}
+                </span>
+              ))}
+              <span className="bubble-tail" />
+            </div>
+            <span className="hero-emoji">🧑‍💼</span>
+            <span className="hero-label">Alex · Tour Manager</span>
+          </div>
+        </div>
       </div>
 
       <div className="content">
