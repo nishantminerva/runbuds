@@ -1,73 +1,55 @@
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+
+const ROLES = [
+  { emoji: "🎸", label: "Guitar" },
+  { emoji: "🥁", label: "Drums" },
+  { emoji: "🎹", label: "Keys" },
+  { emoji: "🎚️", label: "FOH" },
+  { emoji: "💡", label: "Lights" },
+  { emoji: "🚐", label: "Driver" },
+  { emoji: "📋", label: "Manager" },
+  { emoji: "🎟️", label: "Box Office" },
+];
 
 export default function Home() {
   const [hover, setHover] = useState(false);
-  const centerRef = useRef(null);
 
   const onEnter = () => setHover(true);
   const onLeave = () => setHover(false);
 
-  useEffect(() => {
-    let instance = null;
-    let cancelled = false;
-
-    const start = () => {
-      if (cancelled || !window.rive || !centerRef.current) return;
-      instance = new window.rive.Rive({
-        src: "/rive/track.riv",
-        canvas: centerRef.current,
-        autoplay: true,
-        stateMachines: "State Machine 1",
-        fit: window.rive.Fit.contain,
-        alignment: window.rive.Alignment.center,
-        onLoad: () => instance.resizeDrawingSurfaceToCanvas(),
-      });
-    };
-
-    let intervalId = null;
-    if (window.rive) start();
-    else {
-      intervalId = setInterval(() => {
-        if (window.rive) {
-          clearInterval(intervalId);
-          intervalId = null;
-          start();
-        }
-      }, 50);
-    }
-
-    const onResize = () =>
-      instance && instance.resizeDrawingSurfaceToCanvas();
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      cancelled = true;
-      if (intervalId) clearInterval(intervalId);
-      window.removeEventListener("resize", onResize);
-      if (instance && instance.cleanup) instance.cleanup();
-    };
-  }, []);
-
   return (
     <>
       <Head>
-        <title>Runbuds</title>
+        <title>Backline</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
       </Head>
-      <canvas
-        ref={centerRef}
-        id="track-center"
-        className="track-graphic center"
-      />
+
+      <div className="orbit-stage" aria-hidden="true">
+        <div className="orbit-glow" />
+        <div className="orbit-ring" />
+        {ROLES.map((r, i) => (
+          <div
+            key={r.label}
+            className="orbit-item"
+            style={{
+              animationDelay: `${(-40 / ROLES.length) * i}s`,
+            }}
+            title={r.label}
+          >
+            <span className="orbit-emoji">{r.emoji}</span>
+          </div>
+        ))}
+      </div>
+
       <div className="content">
         <div className="text-container">
           <img
-            src="/images/runbuds-logo.svg"
-            alt="Runbuds"
+            src="/images/backline-logo.svg"
+            alt="Backline"
             className="app-logo"
           />
         </div>
@@ -79,13 +61,13 @@ export default function Home() {
         >
           <div className="icon-view">
             <img
-              src="/images/appicon.png"
-              alt="Runbuds App Icon"
+              src="/images/backline-appicon.svg"
+              alt="Backline App Icon"
               className="appicon"
             />
             <img
-              src="/images/qr-code.png"
-              alt="Runbuds QR Code"
+              src="/images/backline-qr.svg"
+              alt="Backline QR Code"
               className="qrcode"
             />
           </div>
