@@ -201,7 +201,7 @@ export default function Home() {
         {CREW.map((m, i) => (
           <div
             key={i}
-            className="crew-pin"
+            className={`crew-pin crew-pin-${i}`}
             style={{
               left: `${m.x}%`,
               top: `${m.y}%`,

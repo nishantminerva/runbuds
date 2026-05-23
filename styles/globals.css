@@ -1075,80 +1075,138 @@ body.legal-page .text-container {
 
 @media (max-width: 560px) {
   :root {
-    --logo-width: 200px;
+    --logo-width: 180px;
   }
   .content {
-    transform: translateY(40px);
-    gap: 28px;
+    transform: translateY(0);
+    gap: 22px;
   }
+
+  /* Top eyebrow drops the meta tail to fit the narrow row next to the
+     countdown chip. */
   .route-eyebrow {
-    font-size: 8.5pt;
-    letter-spacing: 1.6px;
-    top: 14px;
+    font-size: 8pt;
+    letter-spacing: 1.4px;
+    top: 12px;
+    left: 12px;
+    transform: none;
   }
   .route-svg {
-    height: 120px;
-    top: 36px;
+    height: 180px;
+    top: 50px;
   }
-  /* On mobile only show 3 most relevant crew members */
-  .crew-pin:nth-child(n + 7) {
-    display: none;
-  }
-  .crew-pin:nth-child(3),
-  .crew-pin:nth-child(5),
-  .crew-pin:nth-child(7) {
-    display: none;
+
+  /* Show all 6 crew but shrink and hide the text card — just the memoji
+     bubble + status dot on the route. */
+  .crew-pin {
+    gap: 0;
   }
   .memoji-badge {
-    width: 56px;
-    height: 56px;
+    width: 44px;
+    height: 44px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5),
+      0 0 0 2.5px rgba(200, 255, 0, 0.35);
   }
   .memoji {
-    font-size: 38px;
+    font-size: 30px;
   }
   .status-dot {
-    width: 13px;
-    height: 13px;
-    border-width: 2.5px;
-    bottom: 2px;
-    right: 2px;
+    width: 11px;
+    height: 11px;
+    border-width: 2px;
+    bottom: 0;
+    right: 0;
   }
   .crew-card {
-    min-width: 90px;
-    padding: 4px 6px;
-  }
-  .crew-name {
-    font-size: 9pt;
-  }
-  .crew-role {
-    font-size: 7pt;
-    letter-spacing: 0.6px;
-  }
-  .crew-task {
-    font-size: 7.5pt;
-    padding: 1px 6px;
-  }
-  .live-bar {
-    padding: 10px 14px;
-    gap: 10px;
-    bottom: 14px;
-  }
-  .live-bar-task {
-    font-size: 9.5pt;
-  }
-  .live-bar-label {
-    font-size: 7.5pt;
-    letter-spacing: 1.4px;
-  }
-  .live-bar-spark {
     display: none;
   }
-  .live-bar-count-num {
-    font-size: 14pt;
+
+  /* Countdown becomes a small pill in the top-right; smaller text so it
+     doesn't overlap the eyebrow row. */
+  .show-countdown {
+    top: 8px;
+    right: 8px;
+    padding: 6px 10px;
+    gap: 1px;
+    border-radius: 10px;
   }
-  .live-bar-count-lbl {
+  .cd-eyebrow {
     font-size: 6.5pt;
+    letter-spacing: 1.2px;
+    gap: 4px;
+  }
+  .cd-led {
+    width: 5px;
+    height: 5px;
+  }
+  .cd-time {
+    font-size: 11pt;
+    letter-spacing: 0.5px;
+  }
+  .cd-venue {
+    font-size: 6pt;
     letter-spacing: 1px;
+  }
+
+  /* Cities are decorative and were colliding with the countdown and
+     each other on small viewports — hide them. */
+  .city-waypoint {
+    display: none;
+  }
+
+  /* Live-bar slimmed and pinned just above the bottom edge with safe
+     room for the legal links above it. Drop the spark + count columns. */
+  .live-bar {
+    bottom: 12px;
+    padding: 8px 14px;
+    gap: 8px;
+    width: calc(100vw - 24px);
+    max-width: 360px;
+    border-radius: 99px;
+    overflow: hidden;
+    justify-content: flex-start;
+  }
+  .live-bar-spark,
+  .live-bar-count {
+    display: none;
+  }
+  .live-bar-text {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+  .live-bar-label {
+    font-size: 7pt;
+    letter-spacing: 1.2px;
+  }
+  .live-bar-task {
+    font-size: 9pt;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-width: 0;
+    display: block;
+  }
+  .live-bar-led {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Plane: keep visible but a bit smaller on a phone. */
+  .plane-traveler {
+    font-size: 24px;
+  }
+
+  /* Pull the rightmost crew memoji (Rosa, index 5) off the edge so it
+     isn't clipped on narrow viewports. Inline-style `left: 92%` is
+     overridden with !important. */
+  .crew-pin-5 {
+    left: 86% !important;
+  }
+  .crew-pin-4 {
+    left: 72% !important;
   }
   .page-title {
     font-size: 24pt;
@@ -1177,18 +1235,20 @@ body.legal-page .text-container {
   }
   .legal-links-mobile {
     display: flex;
-    gap: 12px;
+    gap: 18px;
     margin-top: 0;
     position: fixed;
-    left: 24px;
-    bottom: 24px;
-    flex-direction: column;
-    align-items: flex-start;
+    left: 50%;
+    bottom: 72px;
+    transform: translateX(-50%);
+    flex-direction: row;
+    align-items: center;
     z-index: 2;
-    padding: 8px;
+    padding: 0;
   }
   .legal-link {
-    font-size: 12pt;
+    font-size: 10.5pt;
+    opacity: 0.7;
   }
   body.legal-page {
     padding-top: 80px;
