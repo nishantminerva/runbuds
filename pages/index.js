@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useEffect, useRef } from "react";
 
 const CREW = [
   {
@@ -64,6 +65,59 @@ const CREW = [
 ];
 
 export default function Home() {
+  const pathRef = useRef(null);
+  const planeRef = useRef(null);
+
+  useEffect(() => {
+    const pathEl = pathRef.current;
+    const planeEl = planeRef.current;
+    if (!pathEl || !planeEl) return;
+
+    // The ✈️ emoji's nose naturally faces ~45° (up-right). Subtract that so
+    // rotate(tangentAngle - emojiOffset) aligns nose with the path direction.
+    const EMOJI_NOSE_OFFSET = 45;
+    const DURATION_MS = 32000;
+
+    let start = null;
+    let rafId = null;
+
+    const tick = (now) => {
+      if (start === null) start = now;
+      const t = ((now - start) / DURATION_MS) % 1;
+
+      const length = pathEl.getTotalLength();
+      const p = pathEl.getPointAtLength(t * length);
+      const pNext = pathEl.getPointAtLength(
+        Math.min(t + 0.001, 1) * length,
+      );
+
+      // Get the SVG's actual rendered box so we can convert from viewBox
+      // (0..100, 0..30) coords into page pixels.
+      const svgEl = pathEl.ownerSVGElement;
+      const svgRect = svgEl.getBoundingClientRect();
+      const screenX = svgRect.left + (p.x / 100) * svgRect.width;
+      const screenY = svgRect.top + (p.y / 30) * svgRect.height;
+
+      // Tangent angle, accounting for the same viewBox→pixel scaling so
+      // the visual angle matches what the eye sees.
+      const dx = (pNext.x - p.x) * (svgRect.width / 100);
+      const dy = (pNext.y - p.y) * (svgRect.height / 30);
+      const angleDeg = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+      planeEl.style.left = `${screenX}px`;
+      planeEl.style.top = `${screenY}px`;
+      planeEl.style.transform = `translate(-50%, -50%) rotate(${angleDeg + EMOJI_NOSE_OFFSET}deg)`;
+      planeEl.style.opacity = "1";
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
+
   return (
     <>
       <Head>
@@ -75,11 +129,48 @@ export default function Home() {
       </Head>
 
       <div className="tour-scene" aria-hidden="true">
+        {/* Ambient particles drifting up */}
+        <div className="ambient-particles">
+          {Array.from({ length: 14 }).map((_, i) => (
+            <span
+              key={i}
+              className="amb-particle"
+              style={{
+                left: `${(i * 7.3) % 100}%`,
+                animationDelay: `${i * 1.7}s`,
+                animationDuration: `${14 + (i % 5) * 3}s`,
+              }}
+            />
+          ))}
+        </div>
+
         {/* Eyebrow */}
         <div className="route-eyebrow">
           <span className="route-eyebrow-dot" />
           ADVANCE · LIVE TOUR · TUE 14
         </div>
+
+        {/* Show countdown */}
+        <div className="show-countdown">
+          <div className="cd-eyebrow">
+            <span className="cd-led" />
+            SHOW IN
+          </div>
+          <div className="cd-time">
+            <span className="cd-num">05</span>
+            <span className="cd-sep">:</span>
+            <span className="cd-num">42</span>
+            <span className="cd-sep">:</span>
+            <span className="cd-num cd-secs">18</span>
+          </div>
+          <div className="cd-venue">LE TRIANON · PARIS</div>
+        </div>
+
+        {/* City waypoint labels */}
+        <span className="city-waypoint city-1">BERLIN</span>
+        <span className="city-waypoint city-2">PARIS</span>
+        <span className="city-waypoint city-3">LYON</span>
+        <span className="city-waypoint city-4">BARCELONA</span>
 
         {/* The wavy tour route path */}
         <svg
@@ -88,6 +179,7 @@ export default function Home() {
           preserveAspectRatio="none"
         >
           <path
+            ref={pathRef}
             d="M 0 18 Q 14 4, 28 22 T 56 16 T 84 14 T 100 22"
             fill="none"
             stroke="rgba(200, 255, 0, 0.32)"
@@ -95,6 +187,15 @@ export default function Home() {
             strokeDasharray="0.8 0.9"
           />
         </svg>
+
+        {/* Plane traveling the route — JS-driven follow of the SVG path */}
+        <span
+          ref={planeRef}
+          className="plane-traveler"
+          aria-hidden="true"
+        >
+          ✈️
+        </span>
 
         {/* Crew memoji avatars along the route */}
         {CREW.map((m, i) => (
