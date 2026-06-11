@@ -6,7 +6,9 @@
         "appID": "KU23Q2477J.app.advancetouring",
         "paths": [
           "/auth/callback",
-          "/auth/reset"
+          "/auth/reset",
+          "/accept-invite",
+          "/invite"
         ]
       }
     ]
