@@ -4,6 +4,23 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* Password-recovery bridge. When the app's custom-scheme redirect
+            isn't in Supabase's Redirect URLs allow-list, Supabase falls back to
+            the Site URL (this site's root) and drops the recovery tokens in the
+            URL hash (#access_token=...&type=recovery). Forward them to the
+            /auth/callback hand-off page, which opens the app. Runs synchronously
+            before paint so the marketing homepage never flashes with tokens in
+            the address bar. Guarded to the root path so it never loops on
+            /auth/callback itself. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var h=location.hash||'',s=location.search||'';" +
+              "if(location.pathname==='/'&&/(access_token|type=recovery|[?#&]error=)/.test(h+s)){" +
+              "location.replace('/auth/callback'+s+h);}}catch(e){}})();",
+          }}
+        />
+
         <meta
           name="description"
           content="Tour management for artists, crew, and backline gear."
