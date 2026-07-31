@@ -293,6 +293,52 @@ body {
   transform: translateY(var(--scan-offset-qr));
 }
 
+.cta-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 32px;
+  border-radius: 99px;
+  font-family: "Clash Display", "SF Pro Display", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.cta-btn:hover {
+  transform: translateY(-1px);
+}
+
+.cta-btn-primary {
+  background: #c8ff00;
+  color: #111;
+  box-shadow: 0 0 24px rgba(200, 255, 0, 0.18);
+}
+
+.cta-btn-primary:hover {
+  box-shadow: 0 0 32px rgba(200, 255, 0, 0.32);
+}
+
+.cta-btn-secondary {
+  background: rgba(200, 255, 0, 0.04);
+  color: #c8ff00;
+  border: 1.5px solid rgba(200, 255, 0, 0.55);
+}
+
+.cta-btn-secondary:hover {
+  background: rgba(200, 255, 0, 0.1);
+}
+
 .coming-soon-btn {
   position: relative;
   display: inline-flex;

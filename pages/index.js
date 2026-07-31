@@ -253,10 +253,14 @@ export default function Home() {
           </div>
         </div>
 
-        <span className="coming-soon-btn" role="status">
-          <span className="cs-dot" />
-          Coming Soon
-        </span>
+        <div className="cta-row">
+          <a className="cta-btn cta-btn-primary" href="https://app.advancetouring.app">
+            Get Started
+          </a>
+          <a className="cta-btn cta-btn-secondary" href="https://app.advancetouring.app">
+            Log In
+          </a>
+        </div>
 
         <div className="legal-links legal-links-desktop">
           <a href="/privacy" className="legal-link">
